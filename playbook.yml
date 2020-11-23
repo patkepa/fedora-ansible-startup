@@ -1,0 +1,181 @@
+- hosts: localhost
+  tasks:
+
+#Enable DNF tweaks
+   - name: Enable DNF Tweak - Closest Server Priority
+     lineinfile:
+      path: /etc/dnf/dnf.conf
+      regexp: '^#fastestmirror=true'
+      insertafter: EOF
+      line: 'fastestmirror=true'
+    
+   - name: Enable DNF Tweak - Max Parallel Downloads
+     lineinfile:
+      path: /etc/dnf/dnf.conf
+      regexp: '^#fastestmirror=true'
+      insertafter: EOF
+      line: 'max_parallel_downloads=6'
+
+# Boot Services Tweaks
+   - name: Boot Tweak - Disable Network Manager and SSSD
+     systemd:
+       name: 
+       - "NetworkManager-wait-online"
+       - "sssd"
+     enabled: no
+
+   - name: Boot Tweak - Mask LVM2
+     systemd:
+       name: lvm2-monitor
+     enabled: no
+     masked: yes
+
+
+#Enable RPM Repositories
+   - name: Enable the RPM Fusion repository - 1
+     dnf:
+      name: "https://download1.rpmfusion.org/free/fedora/rpmfusion-free-release-{{ansible_distribution_major_version}}.noarch.rpm"
+      state: present
+
+   - name: Enable the RPM Fusion repository - 2
+     dnf:
+      name: "https://download1.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-{{ansible_distribution_major_version}}.noarch.rpm"
+      state: present
+
+# UPGRADE ALL PACKAGES
+   - name: upgrade all packages
+     dnf:
+       name: "*"
+       state: latest
+
+# DNF INSTALLATION
+   - name: Install DNF - TLP and modules
+     dnf:
+      name:
+       - "tlp"
+       - "tlp-rdw"
+       - "kernel-devel"
+       - "https://repo.linrunner.de/fedora/tlp/repos/releases/tlp-release.fc{{ansible_distribution_major_version}}.noarch.rpm"
+       - "akmod-acpi_call"
+       - "akmod-tp_smapi"
+      state: present
+
+   - name: Install DNF - Archive Tools
+     dnf:
+      name:
+       - "cabextract"
+       - "lzip"
+       - "p7zip"
+       - "p7zip-plugins"
+       - "unrar"
+      state: present
+
+   - name: Install DNF - Gnome Tweaks
+     dnf:
+      name: gnome-tweak-tool
+      state: present
+
+   - name: Install DNF - Gnome Extensions
+     dnf:
+      name: gnome-extensions-app
+      state: present
+
+   - name: Install DNF - Steam
+     dnf:
+      name: steam
+      state: present
+
+   - name: Install DNF - Python Essentials
+     dnf:
+      name:
+        - "nautilus-python"
+        - "python3-gobject"
+      state: present
+
+   - name: Install DNF - Toolbox
+     dnf:
+      name: toolbox
+      state: present
+
+   - name: Install DNF - VLC
+     dnf:
+      name: vlc
+      state: present
+
+   - name: Install DNF - Fedora Workstation Repositories
+     dnf:
+      name: fedora-workstation-repositories
+      state: present
+
+   - name: Enable Google Chrome repository
+     command: 'dnf config-manager --set-enabled google-chrome'
+
+   - name: Install DNF - Google Chrome
+     dnf:
+      name: google-chrome-stable
+      state: present
+
+  # FLATPAK INSTALLATION
+    #Enable flatpak repository 
+   - name: Enable Flathub repository
+     command: 'flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo'
+
+   - name: Install flatpak - Discord
+     community.general.flatpak:
+       name:  com.discordapp.Discord
+       state: present
+   - name: Install flatpak - Spotify
+     community.general.flatpak:
+       name:  com.spotify.Client
+       state: present
+   - name: Install flatpak -  Microsoft Teams
+     community.general.flatpak:
+       name:  com.microsoft.Teams
+       state: present
+   - name: Install flatpak - Telegram
+     community.general.flatpak:
+       name:  org.telegram.desktop
+       state: present
+   - name: Install flatpak - Visual Studio Code
+     community.general.flatpak:
+       name:  com.visualstudio.code
+       state: present
+   - name: Install flatpak - Flatseal
+     community.general.flatpak:
+       name:  com.github.tchx84.flatseal
+       state: present
+   - name: Install flatpak - Gimp
+     community.general.flatpak:
+       name:  org.gimp.GIMP
+       state: present
+   - name: Install flatpak - Obsidian
+     community.general.flatpak:
+       name:  md.obsidian.Obsidian
+       state: present
+   - name: Install flatpak - Boop-GTK
+     community.general.flatpak:
+       name:  uk.co.mrbenshe.Boop-GTK
+       state: present
+   - name: Install flatpak - Postman
+     community.general.flatpak:
+       name:  com.getpostman.Postman
+       state: present
+   - name: Install flatpak - Pulse Effects
+     community.general.flatpak:
+       name:  com.github.wwmm.pulseeffects
+       state: present
+   - name: Install flatpak - Qalculate
+     community.general.flatpak:
+       name:  io.github.Qalculate
+       state: present
+   - name: Install flatpak - Kdenlive
+     community.general.flatpak:
+       name:  org.kde.kdenlive
+       state: present
+
+
+# FINISHING 
+   - name: Autoremove unneeded packages installed as dependencies
+     dnf:
+      autoremove: yes
+    
