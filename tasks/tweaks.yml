@@ -1,0 +1,47 @@
+#Set hostname
+   - name: Set hostname
+     command: 'hostnamectl set-hostname {{hostname}}'
+
+#Copy over Template files 
+   - name: Copy Templates Folder
+     copy:
+       src: resources/Templates/
+       dest: /home/{{ ansible_env.SUDO_USER }}/Templates/
+     become: yes
+     become_user: "{{ ansible_env.SUDO_USER }}"
+
+#Enable DNF tweaks
+   - name: Enable DNF Tweak - Closest Server Priority
+     lineinfile:
+      path: /etc/dnf/dnf.conf
+      regexp: '^#fastestmirror=true'
+      insertafter: EOF
+      line: 'fastestmirror=true'
+    
+   - name: Enable DNF Tweak - Max Parallel Downloads
+     lineinfile:
+      path: /etc/dnf/dnf.conf
+      regexp: '^#fastestmirror=true'
+      insertafter: EOF
+      line: 'max_parallel_downloads=6'
+
+# Boot Services Tweaks
+   - name: Boot Tweak - Disable SSSD
+     systemd:
+      name: sssd
+      state: stopped
+      enabled: no
+
+   - name: Boot Tweak - Disable Network Manager 
+     systemd:
+      name: NetworkManager-wait-online
+      state: stopped
+      enabled: no
+     
+   - name: Boot Tweak - Mask LVM2
+     systemd:
+      name: lvm2-monitor
+      enabled: no
+      masked: yes
+
+

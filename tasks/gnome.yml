@@ -1,0 +1,157 @@
+   #Shortcuts
+   - name: Set shortcut - Open files
+     dconf:
+        key: "/org/gnome/settings-daemon/plugins/media-keys/home"
+        value: "['<Super>f']"
+
+   - name: Set shortcut - Open browser
+     dconf:
+        key: "/org/gnome/settings-daemon/plugins/media-keys/www"
+        value: "['<Super>b']"
+
+   - name: Set shortcut - Open calculator
+     dconf:
+        key: "/org/gnome/settings-daemon/plugins/mediakeys/calculator"
+        value: "['<Super>n']"
+
+   - name: Set shortcut - Show desktop
+     dconf:
+        key: "/org/gnome/desktop/wm/keybindings/show-desktop"
+        value: "['<Super>d']"
+
+   - name: Set shortcut - Terminal Shortcut - Name
+     dconf:
+      key: "/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom0/name"
+      value: "'terminal'"
+   - name: Set shortcut - Terminal Shortcut - Command
+     dconf:
+      key: "/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom0/command"
+      value: "'gnome-terminal --maximize'"
+   - name: Set shortcut - Terminal Shortcut - Binding
+     dconf:
+       key: "/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom0/binding"
+       value: "'<Super>t'"
+
+   - name: Emable custom shortcuts
+     dconf:
+       key: "/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings"
+       value: "['/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom0/']" #, '/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom1/'
+
+#Set Dark Theme
+   - name: Set Dark Theme
+     dconf:
+        key: "/org/gnome/desktop/interface/gtk-theme"
+        value: "'Adwaita-dark'"
+
+#Enable two-finger scrolling
+   - name: enable two-finger scrolling
+     dconf:
+      key: "/org/gnome/desktop/peripherals/touchpad/two-finger-scrolling-enabled"
+      value: "true"
+
+#Set middle click to minimize
+   - name: middle click titlebar to lower
+     dconf:
+      key: "/org/gnome/desktop/wm/preferences/action-middle-click-titlebar"
+      value: "'minimize'"
+
+#Show battery percentage
+   - name: show battery percentage
+     dconf:
+      key: "/org/gnome/desktop/interface/show-battery-percentage"
+      value: "true"
+
+#Set Night light
+   - name: Enable Night Light
+     dconf:
+      key: "/org/gnome/settings-daemon/plugins/color/night-light-enabled"
+      value: "true"
+
+   - name: Set Night Light Temperature
+     dconf:
+      key: "/org/gnome/settings-daemon/plugins/color/night-light-temperature"
+      value: uint32 2300
+
+#Set AC timeout
+   - name: Set AC timeout
+     dconf:
+        key: "/org/gnome/settings-daemon/plugins/power/sleep-inactive-ac-timeout"
+        value: uint32 3600
+#Set Terminal Settings
+   - name: Terminal Settings - Disable terminal bell
+     dconf:
+       key: "/org/gnome/terminal/legacy/profiles:/:b1dcc9dd-5262-4d8d-a863-c897e6d979b9/audible-bell"
+       value: "false"
+
+   - name: Terminal Settings - Enable terminal transparency
+     dconf:
+       key: "/org/gnome/terminal/legacy/profiles:/:b1dcc9dd-5262-4d8d-a863-c897e6d979b9/use-transparent-background"
+       value: "true"
+
+   - name: Terminal Settings -Transparency percentage
+     dconf:
+       key: "/org/gnome/terminal/legacy/profiles:/:b1dcc9dd-5262-4d8d-a863-c897e6d979b9/background-transparency-percent"
+       value: "28"
+
+   - name: Terminal Settings - Font
+     dconf:
+       key: "/org/gnome/terminal/legacy/profiles:/:b1dcc9dd-5262-4d8d-a863-c897e6d979b9/font"
+       value: "'Monospace 14'"
+
+   - name: Gnome Text Editor Settings - Disable line highlighting 
+     dconf:
+       key: "/org/gnome/gedit/preferences/editor/highlight-current-line"
+       value: false
+
+#Set avatar 
+   - name: Set Avatar - Copy avatar
+     copy:
+       src: resources/avatar
+       dest: /var/lib/AccountsService/icons/{{ ansible_env.SUDO_USER }}
+
+
+   - name: Set Avatar - Change config
+     become: true
+     lineinfile:
+        path: /var/lib/AccountsService/users/{{ ansible_env.SUDO_USER }}
+        regexp: '^Icon='
+        line: "Icon=/var/lib/AccountsService/icons/{{ ansible_env.SUDO_USER }}"
+
+#Set Wallpapers
+
+   - name: Copy wallpaper file
+     copy: src=resources/wallpaper.png dest=/home/{{ansible_env.SUDO_USER}}/Pictures/wallpaper.png
+     become: yes
+     become_user: "{{ ansible_env.SUDO_USER }}"
+
+   - name: Set GNOME wallpaper
+     dconf: key="/org/gnome/desktop/background/picture-uri" value="'file:///home/{{ansible_env.SUDO_USER}}/Pictures/wallpaper.png'"
+     
+
+   - name: Copy lockscreenfile
+     copy: src=resources/lockscreen.jpg dest=/home/{{ansible_env.SUDO_USER}}/Pictures/lockscreen.jpg 
+     become: yes
+     become_user: "{{ ansible_env.SUDO_USER }}"
+
+   - name: Set lock screen background
+     dconf: key="/org/gnome/desktop/screensaver/picture-uri" value="'file:///home/{{ansible_env.SUDO_USER}}/Pictures/lockscreen.jpg'"
+
+#Set favorites
+   - name: Set favorites
+     dconf:
+      key: "/org/gnome/shell/favorite-apps"
+      value: "['google-chrome.desktop', 'org.gnome.Nautilus.desktop', 'com.discordapp.Discord.desktop', 'org.telegram.desktop.desktop', 'com.spotify.Client.desktop']"
+
+#TODO: Install extensions
+   - name: install extensions
+     become: true
+     package:
+       name:
+          - gnome-shell-extension-windowoverlay-icons
+
+   - name: enable extensions
+     dconf:
+       key: "/org/gnome/shell/enabled-extensions"
+       value: "['windowoverlay-icons@sustmidown.centrum.cz','background-logo@fedorahosted.org', 'topindicatorapp@quiro9.com', 'noannoyance@daase.net', 'audio-output-switcher@anduchs', 'gnome-shell-duckduckgo-search-provider@keithcirkel.co.uk']
+"
+
