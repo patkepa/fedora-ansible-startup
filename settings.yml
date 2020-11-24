@@ -1,0 +1,3 @@
+hostname: T450s
+dns_main: 8.8.8.8
+dns_alternative: 8.8.4.4

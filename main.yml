@@ -1,0 +1,24 @@
+- hosts: localhost
+  become: true
+  vars_files:
+    - settings.yml
+  pre_tasks:
+      - name: Install playbook requirements
+        become: true
+        package:
+         name:
+          - python3-psutil
+          - dconf
+          - dbus-tools
+          - dbus-daemon
+  tasks:
+   - name: Set Avatar - Copy avatar
+     copy:
+       src: resources/avatar
+       dest: "/var/lib/AccountsService/icons/{{ ansible_env.USER }}"
+
+   - include: tasks/tweaks.yml
+   - include: tasks/gnome.yml
+   - include: tasks/packages.yml
+
+
