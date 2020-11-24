@@ -98,10 +98,10 @@
        key: "/org/gnome/terminal/legacy/profiles:/:b1dcc9dd-5262-4d8d-a863-c897e6d979b9/font"
        value: "'Monospace 14'"
 
-   - name: Gnome Text Editor Settings - Disable line highlighting 
-     dconf:
-       key: "/org/gnome/gedit/preferences/editor/highlight-current-line"
-       value: false
+  #  - name: Gnome Text Editor Settings - Disable line highlighting 
+  #    dconf:
+  #      key: "/org/gnome/gedit/preferences/editor/highlight-current-line"
+  #      value: "false"
 
 #Set avatar 
    - name: Set Avatar - Copy avatar
@@ -142,16 +142,18 @@
       key: "/org/gnome/shell/favorite-apps"
       value: "['google-chrome.desktop', 'org.gnome.Nautilus.desktop', 'com.discordapp.Discord.desktop', 'org.telegram.desktop.desktop', 'com.spotify.Client.desktop']"
 
-#TODO: Install extensions
-   - name: install extensions
-     become: true
-     package:
-       name:
-          - gnome-shell-extension-windowoverlay-icons
 
-   - name: enable extensions
-     dconf:
-       key: "/org/gnome/shell/enabled-extensions"
-       value: "['windowoverlay-icons@sustmidown.centrum.cz','background-logo@fedorahosted.org', 'topindicatorapp@quiro9.com', 'noannoyance@daase.net', 'audio-output-switcher@anduchs', 'gnome-shell-duckduckgo-search-provider@keithcirkel.co.uk']
-"
+
+# TODO: Install extensions
+#    - name: install extensions
+#      become: true
+#      package:
+#        name:
+#           - gnome-shell-extension-windowoverlay-icons
+
+#    - name: enable extensions
+#      dconf:
+#        key: "/org/gnome/shell/enabled-extensions"
+#        value: "['windowoverlay-icons@sustmidown.centrum.cz','background-logo@fedorahosted.org', 'topindicatorapp@quiro9.com', 'noannoyance@daase.net', 'audio-output-switcher@anduchs', 'gnome-shell-duckduckgo-search-provider@keithcirkel.co.uk']
+# "
 
