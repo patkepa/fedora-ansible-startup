@@ -12,10 +12,6 @@
           - dbus-tools
           - dbus-daemon
   tasks:
-   - name: Set Avatar - Copy avatar
-     copy:
-       src: resources/avatar
-       dest: "/var/lib/AccountsService/icons/{{ ansible_env.USER }}"
 
    - include: tasks/tweaks.yml
    - include: tasks/gnome.yml
