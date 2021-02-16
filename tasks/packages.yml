@@ -76,7 +76,6 @@
         - '@Sound and Video'
       state: present
 
-
    - name: Install DNF - Fedora Workstation Repositories
      dnf:
       name: fedora-workstation-repositories
@@ -188,12 +187,7 @@
        ./jetbrains-toolbox
      become: yes
      become_user: "{{ ansible_env.SUDO_USER }}"
-
-#wget https://download.jetbrains.com/toolbox/jetbrains-toolbox-1.18.7609.tar.gz
-#tar -zxvf jetbrains*.tar.gz
-#cd jetbrains*/
-#jetrains*/./jetbrains-toolbox
-
+     
 # FINISHING 
    - name: Autoremove unneeded packages installed as dependencies
      dnf:
